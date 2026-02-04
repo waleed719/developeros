@@ -1,16 +1,34 @@
-# developeros
+# Developer OS
 
-A new Flutter project.
+A Fedora-inspired portfolio web application built with Flutter Web, featuring a desktop-like environment, window management, and a terminal interface.
+
+## Live Demo
+Check out the live version here: [https://waleed719.github.io/developeros/](https://waleed719.github.io/developeros/)
+
+## Features
+- **Window Management**: Drag, drop, minimize, and maximize windows.
+- **Terminal**: A functional terminal with commands like `whoami`, `skills`, `projects`, and `contact`.
+- **File Manager**: A visual project explorer.
+- **Themes**: Switch between light and dark modes.
+
+## Deployment
+This project is automatically deployed to GitHub Pages using GitHub Actions.
+Any push to the `main` branch triggers a build and deploys the `web` output to the `gh-pages` branch.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/waleed719/developeros.git
+    cd developeros
+    ```
 
-A few resources to get you started if this is your first Flutter project:
+2.  **Install dependencies**:
+    ```bash
+    flutter pub get
+    ```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+3.  **Run locally**:
+    ```bash
+    flutter run -d chrome
+    ```
