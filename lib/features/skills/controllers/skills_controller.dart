@@ -14,18 +14,18 @@ class SkillsController extends ChangeNotifier {
     SkillCategoryType.frontend: [
       Skill(name: 'Flutter', level: 0.95, icon: 'flutter'),
       Skill(name: 'Dart', level: 0.9, icon: 'dart'),
-      Skill(name: 'HTML/CSS', level: 0.85, icon: 'html'),
-      Skill(name: 'React', level: 0.7, icon: 'react'),
+      // Skill(name: 'Python', level: 0.85, icon: 'python'),
+      // Skill(name: 'React', level: 0.7, icon: 'react'),
     ],
     SkillCategoryType.backend: [
-      Skill(name: 'Node.js', level: 0.75, icon: 'node'),
-      Skill(name: 'PostgreSQL', level: 0.8, icon: 'db'),
+      // Skill(name: 'Node.js', level: 0.75, icon: 'node'),
+      Skill(name: 'MySQLServer', level: 0.8, icon: 'db'),
       Skill(name: 'Firebase', level: 0.85, icon: 'firebase'),
       Skill(name: 'Python', level: 0.65, icon: 'python'),
     ],
     SkillCategoryType.tools: [
       Skill(name: 'Git', level: 0.9, icon: 'git'),
-      Skill(name: 'Docker', level: 0.6, icon: 'docker'),
+      // Skill(name: 'Docker', level: 0.6, icon: 'docker'),
       Skill(name: 'Linux', level: 0.85, icon: 'linux'),
       Skill(name: 'VS Code', level: 0.95, icon: 'vscode'),
     ],

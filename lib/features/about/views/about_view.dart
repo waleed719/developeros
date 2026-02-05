@@ -24,7 +24,8 @@ class AboutView extends StatelessWidget {
                   const CircleAvatar(
                     radius: 80,
                     backgroundColor: Colors.white10,
-                    child: Icon(Icons.person, size: 100, color: Colors.white),
+                    backgroundImage: AssetImage('assets/images/profilePic.png'),
+                    // child: Icon(Icons.person, size: 100, color: Colors.white),
                   ),
                   const SizedBox(height: 24),
                   Text(

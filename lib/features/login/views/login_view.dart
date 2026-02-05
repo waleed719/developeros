@@ -30,10 +30,12 @@ class LoginView extends StatelessWidget {
               children: [
                 const _DigitalClockLarge(),
                 const SizedBox(height: 48),
-                const CircleAvatar(
-                  radius: 48,
+                CircleAvatar(
+                  radius: 50,
                   backgroundColor: Colors.white24,
-                  child: Icon(Icons.person, size: 64, color: Colors.white),
+                  backgroundImage: const AssetImage(
+                    'assets/images/profilePic.png',
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Text(
