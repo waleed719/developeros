@@ -18,22 +18,33 @@ class ExperienceView extends StatelessWidget {
           itemCount: controller.experiences.length,
           itemBuilder: (context, index) {
             final item = controller.experiences[index];
-            return _buildTimelineItem(
-              context,
-              item,
-              index == controller.experiences.length - 1,
+            return _TimelineItem(
+              item: item,
+              isLast: index == controller.experiences.length - 1,
             );
           },
         ),
       ),
     );
   }
+}
 
-  Widget _buildTimelineItem(
-    BuildContext context,
-    ExperienceItem item,
-    bool isLast,
-  ) {
+// Stateful widget for hover effects
+class _TimelineItem extends StatefulWidget {
+  final ExperienceItem item;
+  final bool isLast;
+
+  const _TimelineItem({required this.item, required this.isLast});
+
+  @override
+  State<_TimelineItem> createState() => _TimelineItemState();
+}
+
+class _TimelineItemState extends State<_TimelineItem> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,47 +60,73 @@ class ExperienceView extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
               ),
-              if (!isLast)
+              if (!widget.isLast)
                 Expanded(child: Container(width: 2, color: Colors.white24)),
             ],
           ),
           const SizedBox(width: 24),
-          // Content Column
+          // Content Column with hover effect
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 32.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.period,
-                    style: const TextStyle(
-                      color: Color(0xFF3584E4),
-                      fontWeight: FontWeight.bold,
+            child: MouseRegion(
+              onEnter: (_) => setState(() => _isHovered = true),
+              onExit: (_) => setState(() => _isHovered = false),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeOutCubic,
+                transform: Matrix4.identity()..scale(_isHovered ? 1.02 : 1.0),
+                transformAlignment: Alignment.centerLeft,
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  margin: const EdgeInsets.only(bottom: 32.0, right: 8.0),
+                  decoration: BoxDecoration(
+                    color: _isHovered
+                        ? Colors.white.withValues(alpha: 0.05)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: _isHovered
+                          ? Colors.white.withValues(alpha: 0.1)
+                          : Colors.transparent,
+                      width: 1,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    item.position,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.item.period,
+                        style: const TextStyle(
+                          color: Color(0xFF3584E4),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        widget.item.position,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        widget.item.company,
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        widget.item.description,
+                        style: const TextStyle(height: 1.5),
+                      ),
+                      const SizedBox(height: 16),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: widget.item.technologies
+                            .map((tech) => _TechTag(text: tech))
+                            .toList(),
+                      ),
+                    ],
                   ),
-                  Text(
-                    item.company,
-                    style: const TextStyle(color: Colors.white70),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(item.description, style: const TextStyle(height: 1.5)),
-                  const SizedBox(height: 16),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: item.technologies
-                        .map((tech) => _buildTechTag(tech))
-                        .toList(),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
@@ -97,16 +134,55 @@ class ExperienceView extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildTechTag(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.white10,
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: Colors.white12),
+// Stateful tech tag with hover effect
+class _TechTag extends StatefulWidget {
+  final String text;
+
+  const _TechTag({required this.text});
+
+  @override
+  State<_TechTag> createState() => _TechTagState();
+}
+
+class _TechTagState extends State<_TechTag> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedScale(
+        scale: _isHovered ? 1.08 : 1.0,
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeOutCubic,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.easeOutCubic,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          decoration: BoxDecoration(
+            color: _isHovered
+                ? const Color(0xFF3584E4).withValues(alpha: 0.2)
+                : Colors.white10,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(
+              color: _isHovered
+                  ? const Color(0xFF3584E4).withValues(alpha: 0.5)
+                  : Colors.white12,
+            ),
+          ),
+          child: Text(
+            widget.text,
+            style: TextStyle(
+              fontSize: 11,
+              color: _isHovered ? const Color(0xFF3584E4) : Colors.white,
+              fontWeight: _isHovered ? FontWeight.w600 : FontWeight.normal,
+            ),
+          ),
+        ),
       ),
-      child: Text(text, style: const TextStyle(fontSize: 11)),
     );
   }
 }

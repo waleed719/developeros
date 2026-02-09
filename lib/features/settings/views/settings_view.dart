@@ -58,16 +58,16 @@ class _SettingsViewState extends State<SettingsView> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildColorCircle(const Color(0xFF3584E4), 'Fedora Blue'),
-            _buildColorCircle(const Color(0xFF2EC27E), 'GNOME Green'),
-            _buildColorCircle(const Color(0xFFF5C211), 'Solar Yellow'),
-            _buildColorCircle(const Color(0xFFC061CB), 'Matcha Purple'),
+            _buildColorCircle(const Color(0xFF3584E4), 'Ocean Blue'),
+            _buildColorCircle(const Color(0xFF2EC27E), 'Success Green'),
+            _buildColorCircle(const Color(0xFFF5C211), 'Energy Yellow'),
+            _buildColorCircle(const Color(0xFFC061CB), 'Vibrant Purple'),
           ],
         ),
         const SizedBox(height: 48),
         const Center(
           child: Text(
-            'Developer OS v1.0.0 (Fedora Edition)',
+            'Waleed Qamar - Portfolio 2026',
             style: TextStyle(color: Colors.white38, fontSize: 12),
           ),
         ),

@@ -8,7 +8,7 @@ class ExperienceController extends ChangeNotifier {
       position: 'Flutter Developer',
       period: '2023 - Present',
       description:
-          'Developing high-performance Flutter applications and contributing to various open-source projects including Developer OS.',
+          'Developing high-performance Flutter applications and contributing to various open-source projects including this portfolio and other projects.',
       technologies: ['Flutter', 'Dart', 'Firebase', 'Clean Architecture'],
     ),
     ExperienceItem(

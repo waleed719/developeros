@@ -5,8 +5,15 @@ import '../models/project_model.dart';
 import 'project_details_view.dart';
 import '../../desktop/controllers/window_manager.dart';
 
-class ProjectsView extends StatelessWidget {
+class ProjectsView extends StatefulWidget {
   const ProjectsView({super.key});
+
+  @override
+  State<ProjectsView> createState() => _ProjectsViewState();
+}
+
+class _ProjectsViewState extends State<ProjectsView> {
+  String? _selectedProjectId;
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +118,28 @@ class ProjectsView extends StatelessWidget {
                             return _NewFolderItem();
                           }
                           final project = controller.projects[index];
-                          return _FolderItem(project: project);
+                          return _FolderItem(
+                            project: project,
+                            isSelected: _selectedProjectId == project.title,
+                            onTap: () {
+                              setState(() {
+                                _selectedProjectId = project.title;
+                              });
+                            },
+                            onDoubleTap: () {
+                              setState(() {
+                                _selectedProjectId = project.title;
+                              });
+                              sl<WindowManager>().openWindow(
+                                WindowEntry(
+                                  id: 'project_details_${project.title}',
+                                  title: project.title,
+                                  icon: Icons.folder_special,
+                                  content: ProjectDetailsView(project: project),
+                                ),
+                              );
+                            },
+                          );
                         },
                       ),
                       const SizedBox(height: 32),
@@ -212,28 +240,30 @@ class _SidebarItem extends StatelessWidget {
 
 class _FolderItem extends StatelessWidget {
   final Project project;
+  final bool isSelected;
+  final VoidCallback onTap;
+  final VoidCallback onDoubleTap;
 
-  const _FolderItem({required this.project});
+  const _FolderItem({
+    required this.project,
+    required this.isSelected,
+    required this.onTap,
+    required this.onDoubleTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        // Open Project Details as a new window/content replaces this view
-        sl<WindowManager>().openWindow(
-          WindowEntry(
-            id: 'project_details_${project.title}',
-            title: project.title,
-            icon: Icons.folder_special,
-            content: ProjectDetailsView(project: project),
-          ),
-        );
-      },
+      onTap: onTap,
+      onDoubleTap: onDoubleTap,
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+          border: Border.all(
+            color: isSelected ? const Color(0xFF3584E4) : Colors.transparent,
+            width: 2,
+          ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -6,7 +6,7 @@ class AboutController extends ChangeNotifier {
     name: 'Waleed Qamar',
     title: 'Flutter Developer & Computer Science Student',
     bio:
-        'Passionate about building high-quality agentic systems and premium UI/UX experiences. Expert in Clean Architecture and the power of Dart.',
+        'Passionate about building high-quality agentic applications and premium UI/UX experiences. Expert in Clean Architecture and the power of Dart.',
     avatarUrl: 'https://github.com/waleedqamar.png', // Placeholder
     email: 'wqamar719@gmail.com',
     githubUrl: 'https://github.com/waleed719',

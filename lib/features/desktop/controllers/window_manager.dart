@@ -21,14 +21,31 @@ class WindowEntry {
 class WindowManager extends ChangeNotifier {
   final List<WindowEntry> _windows = [];
 
+  // Cascading offset constants
+  static const double _offsetX = 40.0;
+  static const double _offsetY = 40.0;
+  static const double _baseX = 100.0;
+  static const double _baseY = 100.0;
+
   List<WindowEntry> get windows => List.unmodifiable(_windows);
 
   void openWindow(WindowEntry window) {
     // Check if window is already open
     final existingIndex = _windows.indexWhere((w) => w.id == window.id);
     if (existingIndex != -1) {
+      // Window already exists, bring it to front
       bringToFront(window.id);
     } else {
+      // New window: calculate cascading position based on current window count
+      final windowCount = _windows.length;
+      final newPosition = Offset(
+        _baseX + (windowCount * _offsetX),
+        _baseY + (windowCount * _offsetY),
+      );
+
+      // Update window position before adding
+      window.position = newPosition;
+
       _windows.add(window);
       notifyListeners();
     }

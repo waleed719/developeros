@@ -16,7 +16,6 @@ class AboutView extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Left: Avatar and Title
             Expanded(
               flex: 1,
               child: Column(
@@ -54,7 +53,7 @@ class AboutView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'System Overview',
+                    'Profile Summary',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       color: const Color(0xFF3584E4),
                       fontWeight: FontWeight.bold,
@@ -69,7 +68,7 @@ class AboutView extends StatelessWidget {
                   ),
                   const SizedBox(height: 32),
                   Text(
-                    'Core Modules',
+                    'Core Strengths',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       color: const Color(0xFF3584E4),
                       fontWeight: FontWeight.bold,

@@ -38,4 +38,6 @@ class SkillsController extends ChangeNotifier {
   };
 
   List<Skill> get currentSkills => _skillsData[_selectedCategory] ?? [];
+
+  Map<SkillCategoryType, List<Skill>> get allSkillsData => _skillsData;
 }
