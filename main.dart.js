@@ -42315,7 +42315,7 @@ A.JP.prototype={
 J(a){return A.ja($.dl().$1$0(t.Uh),new A.a1f(),null)}}
 A.a1f.prototype={
 $2(a,b){var s=null,r=$.dl().$1$0(t.Uh),q=A.lA(s,A.av2(B.a7,s,s,B.T),A.aSY().$0(),!0),p=A.lA(s,A.av2(B.af,s,s,B.T),A.avZ(A.lA(B.af,s,s,s).ok),!0),o=r.a
-return new A.mX($.aF3(),"Developer OS",q,p,o,!1,s)},
+return new A.mX($.aF3(),"Waleed Qamar",q,p,o,!1,s)},
 $S:406}
 A.hH.prototype={
 K(){return"AnimationStatus."+this.b},
