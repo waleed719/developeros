@@ -1,10 +1,10 @@
-import 'package:developeros/features/projects/views/widgets/features_tab.dart';
-import 'package:developeros/features/projects/views/widgets/gallery_tab.dart';
-import 'package:developeros/features/projects/views/widgets/overview_tab.dart';
-import 'package:developeros/features/projects/views/widgets/timeline_tab.dart';
+import 'package:developeros/features/projects/views/widgets/project_details_section.dart';
+import 'package:developeros/features/projects/views/widgets/project_features_section.dart';
+import 'package:developeros/features/projects/views/widgets/project_hero_section.dart';
+import 'package:developeros/features/projects/views/widgets/project_overview_section.dart';
+import 'package:developeros/features/projects/views/widgets/project_persistent_footer.dart';
+import 'package:developeros/features/projects/views/widgets/project_tech_stack_section.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-// import 'package:flutter/services.dart';
 import '../models/project_model.dart';
 
 class ProjectDetailsView extends StatefulWidget {
@@ -16,55 +16,23 @@ class ProjectDetailsView extends StatefulWidget {
   State<ProjectDetailsView> createState() => _ProjectDetailsViewState();
 }
 
-class _ProjectDetailsViewState extends State<ProjectDetailsView>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  bool _isLightboxVisible = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 4, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
+class _ProjectDetailsViewState extends State<ProjectDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Column(
         children: [
-          // Header Section - hide when lightbox is visible
-          if (!_isLightboxVisible) ...[
-            _buildHeader(context),
-            const SizedBox(height: 24),
-          ],
-
-          // Tab Bar
-          _buildTabBar(context),
-          const SizedBox(height: 24),
-
-          // Tab Content
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
+            child: Stack(
               children: [
-                GalleryTab(
-                  project: widget.project,
-                  onLightboxChanged: (isVisible) {
-                    setState(() {
-                      _isLightboxVisible = isVisible;
-                    });
-                  },
+                _buildScrollableContent(context),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: ProjectPersistentFooter(project: widget.project),
                 ),
-                OverviewTab(project: widget.project),
-                FeaturesTab(project: widget.project),
-                TimelineTab(project: widget.project),
               ],
             ),
           ),
@@ -73,120 +41,76 @@ class _ProjectDetailsViewState extends State<ProjectDetailsView>
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(32, 32, 32, 0),
-      child: Row(
+  Widget _buildScrollableContent(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(
+        24,
+        24,
+        24,
+        100,
+      ), // Extra bottom padding for footer
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 80,
-            height: 80,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: const Color(0xFF3584E4),
-              image: DecorationImage(
-                image: AssetImage(widget.project.imageUrl),
-                fit: BoxFit.contain,
-              ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.project.title,
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'v1.0.0 • Public Repository',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(color: Colors.white54),
-                ),
-              ],
-            ),
-          ),
-          ElevatedButton.icon(
-            onPressed: () async {
-              if (widget.project.demoUrl != null) {
-                final url = Uri.parse(widget.project.demoUrl!);
-                if (await canLaunchUrl(url)) {
-                  await launchUrl(url, mode: LaunchMode.externalApplication);
-                }
+          ProjectHeroSection(project: widget.project),
+          const SizedBox(height: 24),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth > 800) {
+                return _buildWideLayout(context);
+              } else {
+                return _buildNarrowLayout(context);
               }
             },
-            icon: const Icon(Icons.open_in_new, size: 18),
-            label: const Text('Live Preview'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white10,
-              foregroundColor: Colors.white,
-            ),
-          ),
-          const SizedBox(width: 12),
-          ElevatedButton.icon(
-            onPressed: widget.project.githubUrl.isEmpty
-                ? () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Repository is Private!')),
-                    );
-                  }
-                : () async {
-                    final url = Uri.parse(widget.project.githubUrl);
-                    if (await canLaunchUrl(url)) {
-                      await launchUrl(
-                        url,
-                        mode: LaunchMode.externalApplication,
-                      );
-                    }
-                  },
-            icon: const Icon(Icons.star_border, size: 18),
-            label: Text('Star ${widget.project.metrics?.stars ?? 0}'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: widget.project.githubUrl.isEmpty
-                  ? Colors.grey
-                  : const Color(0xFF3584E4),
-              foregroundColor: Colors.white,
-            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTabBar(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-        ),
-        child: TabBar(
-          controller: _tabController,
-          indicator: BoxDecoration(
-            color: const Color(0xFF3584E4),
-            borderRadius: BorderRadius.circular(10),
+  Widget _buildWideLayout(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ProjectOverviewSection(project: widget.project),
+              const SizedBox(height: 32),
+              ProjectFeaturesSection(project: widget.project),
+            ],
           ),
-          indicatorSize: TabBarIndicatorSize.tab,
-          dividerColor: Colors.transparent,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white54,
-          tabs: const [
-            Tab(icon: Icon(Icons.photo_library), text: 'Gallery'),
-            Tab(icon: Icon(Icons.info_outline), text: 'Overview'),
-            Tab(icon: Icon(Icons.extension), text: 'Features'),
-            Tab(icon: Icon(Icons.timeline), text: 'Timeline'),
-          ],
         ),
-      ),
+        const SizedBox(width: 24),
+        Expanded(
+          flex: 1,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ProjectTechStackSection(project: widget.project),
+              const SizedBox(height: 24),
+              ProjectDetailsSection(project: widget.project),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNarrowLayout(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ProjectOverviewSection(project: widget.project),
+        const SizedBox(height: 32),
+        ProjectFeaturesSection(project: widget.project),
+        const SizedBox(height: 32),
+        ProjectTechStackSection(project: widget.project),
+        const SizedBox(height: 24),
+        ProjectDetailsSection(project: widget.project),
+      ],
     );
   }
 }
