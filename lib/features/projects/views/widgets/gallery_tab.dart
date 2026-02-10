@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 
 class GalleryTab extends StatefulWidget {
   final Project project;
-  const GalleryTab({super.key, required this.project});
+  final Function(bool)? onLightboxChanged;
+  const GalleryTab({super.key, required this.project, this.onLightboxChanged});
 
   @override
   State<GalleryTab> createState() => _GalleryTabState();
@@ -43,8 +44,10 @@ class _GalleryTabState extends State<GalleryTab> {
                       child: Buildmainimage(
                         project: widget.project,
                         currentImageIndex: _currentImageIndex,
-                        onShowLightbox: () =>
-                            setState(() => showLightbox = true),
+                        onShowLightbox: () {
+                          setState(() => showLightbox = true);
+                          widget.onLightboxChanged?.call(true);
+                        },
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -71,7 +74,10 @@ class _GalleryTabState extends State<GalleryTab> {
           Buildlightbox(
             project: widget.project,
             currentImageIndex: _currentImageIndex,
-            onClose: () => setState(() => showLightbox = false),
+            onClose: () {
+              setState(() => showLightbox = false);
+              widget.onLightboxChanged?.call(false);
+            },
             onImageChanged: (newIndex) =>
                 setState(() => _currentImageIndex = newIndex),
           ),

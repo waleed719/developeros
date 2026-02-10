@@ -3,6 +3,7 @@ import 'package:developeros/features/projects/views/widgets/gallery_tab.dart';
 import 'package:developeros/features/projects/views/widgets/overview_tab.dart';
 import 'package:developeros/features/projects/views/widgets/timeline_tab.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 // import 'package:flutter/services.dart';
 import '../models/project_model.dart';
 
@@ -18,6 +19,7 @@ class ProjectDetailsView extends StatefulWidget {
 class _ProjectDetailsViewState extends State<ProjectDetailsView>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  bool _isLightboxVisible = false;
 
   @override
   void initState() {
@@ -37,9 +39,11 @@ class _ProjectDetailsViewState extends State<ProjectDetailsView>
       backgroundColor: Colors.transparent,
       body: Column(
         children: [
-          // Header Section
-          _buildHeader(context),
-          const SizedBox(height: 24),
+          // Header Section - hide when lightbox is visible
+          if (!_isLightboxVisible) ...[
+            _buildHeader(context),
+            const SizedBox(height: 24),
+          ],
 
           // Tab Bar
           _buildTabBar(context),
@@ -50,7 +54,14 @@ class _ProjectDetailsViewState extends State<ProjectDetailsView>
             child: TabBarView(
               controller: _tabController,
               children: [
-                GalleryTab(project: widget.project),
+                GalleryTab(
+                  project: widget.project,
+                  onLightboxChanged: (isVisible) {
+                    setState(() {
+                      _isLightboxVisible = isVisible;
+                    });
+                  },
+                ),
                 OverviewTab(project: widget.project),
                 FeaturesTab(project: widget.project),
                 TimelineTab(project: widget.project),
@@ -102,21 +113,17 @@ class _ProjectDetailsViewState extends State<ProjectDetailsView>
               ],
             ),
           ),
-          if (widget.project.demoUrl != null)
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.open_in_new, size: 18),
-              label: const Text('Live Demo'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white10,
-                foregroundColor: Colors.white,
-              ),
-            ),
-          const SizedBox(width: 12),
           ElevatedButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.star_border, size: 18),
-            label: Text('Star ${widget.project.metrics?.stars ?? 0}'),
+            onPressed: () async {
+              if (widget.project.demoUrl != null) {
+                final url = Uri.parse(widget.project.demoUrl!);
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                }
+              }
+            },
+            icon: const Icon(Icons.open_in_new, size: 18),
+            label: const Text('Live Preview'),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white10,
               foregroundColor: Colors.white,
@@ -124,11 +131,27 @@ class _ProjectDetailsViewState extends State<ProjectDetailsView>
           ),
           const SizedBox(width: 12),
           ElevatedButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.download, size: 18),
-            label: const Text('Clone'),
+            onPressed: widget.project.githubUrl.isEmpty
+                ? () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Repository is Private!')),
+                    );
+                  }
+                : () async {
+                    final url = Uri.parse(widget.project.githubUrl);
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(
+                        url,
+                        mode: LaunchMode.externalApplication,
+                      );
+                    }
+                  },
+            icon: const Icon(Icons.star_border, size: 18),
+            label: Text('Star ${widget.project.metrics?.stars ?? 0}'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF3584E4),
+              backgroundColor: widget.project.githubUrl.isEmpty
+                  ? Colors.grey
+                  : const Color(0xFF3584E4),
               foregroundColor: Colors.white,
             ),
           ),

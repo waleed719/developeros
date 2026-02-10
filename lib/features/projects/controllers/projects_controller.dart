@@ -94,7 +94,7 @@ class ProjectsController extends ChangeNotifier {
       description:
           'An offline-first Flutter application for memory training and cognitive development. Features progressive difficulty, daily missions, and comprehensive analytics.',
       imageUrl: 'assets/projects/mind_forge/logo.png',
-      githubUrl: 'https://github.com/waleedqamar/mindforge',
+      githubUrl: '',
       tags: ['Flutter', 'Clean Architecture', 'Offline-First', 'Mobile'],
       galleryImages: [
         ProjectImage(
@@ -148,6 +148,7 @@ class ProjectsController extends ChangeNotifier {
           'Difficulty Levels': '10',
         },
       ),
+      demoUrl: 'https://mind_forge.surge.sh/',
     ),
     Project(
       title: 'AH Traders',
@@ -198,6 +199,74 @@ class ProjectsController extends ChangeNotifier {
         customMetrics: {
           'Products': '100+',
           'Categories': '12',
+          'Daily Visitors': '50+',
+        },
+      ),
+    ),
+
+    Project(
+      title: 'Prayer Pals',
+      description:
+          "Manage your prayers while colaborating with your friends, families, and loved ones.",
+      imageUrl: 'assets/projects/prayerpals/logo.png',
+      githubUrl: '',
+      tags: ['Flutter', 'Firebase', 'Real time collaboration', 'Mobile App'],
+      galleryImages: [
+        ProjectImage(
+          url: 'assets/projects/prayerpals/Prayer pals.png',
+          orientation: ImageOrientation.landscape,
+          caption: 'Prayer pals thumbnail',
+        ),
+        ProjectImage(
+          url: 'assets/projects/prayerpals/onboarding.jpeg',
+          orientation: ImageOrientation.landscape,
+          caption: 'Prayer pals onboarding',
+        ),
+        ProjectImage(
+          url: 'assets/projects/prayerpals/main_screen.jpeg',
+          orientation: ImageOrientation.landscape,
+          caption: 'Prayer pals main screen',
+        ),
+        ProjectImage(
+          url: 'assets/projects/prayerpals/location_screen.jpeg',
+          orientation: ImageOrientation.landscape,
+          caption: 'Prayer pals location screen',
+        ),
+        ProjectImage(
+          url: 'assets/projects/prayerpals/collab_login_screen.jpeg',
+          orientation: ImageOrientation.landscape,
+          caption: 'Prayer pals colaboration login screen',
+        ),
+      ],
+      features: [
+        ProjectFeature(
+          icon: Icons.inventory,
+          title: 'Real time collaboration',
+          description:
+              'Real time collaboration with friends and family to manage your prayers.',
+        ),
+        ProjectFeature(
+          icon: Icons.admin_panel_settings,
+          title: 'Firebase Authentication',
+          description:
+              'Firebase Authentication for secure user authentication.',
+        ),
+        ProjectFeature(
+          icon: Icons.cloud,
+          title: 'Firebase Backend',
+          description:
+              'Firebase Backend for real-time database, authentication, and storage integration.',
+        ),
+        ProjectFeature(
+          icon: Icons.phone,
+          title: 'Firebase Cloud Messaging',
+          description: 'Firebase Cloud Messaging for push notifications.',
+        ),
+      ],
+      metrics: ProjectMetrics(
+        customMetrics: {
+          'Users': '100+',
+          'Prayers': '12',
           'Daily Visitors': '50+',
         },
       ),
