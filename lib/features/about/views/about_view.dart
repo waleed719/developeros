@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/di/di.dart';
 import '../controllers/about_controller.dart';
+import 'widgets/highlight_chip.dart';
 
 class AboutView extends StatelessWidget {
   const AboutView({super.key});
@@ -79,7 +80,7 @@ class AboutView extends StatelessWidget {
                     spacing: 12,
                     runSpacing: 12,
                     children: profile.highlights
-                        .map((h) => _buildHighlightChip(context, h))
+                        .map((h) => HighlightChip(text: h))
                         .toList(),
                   ),
                 ],
@@ -88,18 +89,6 @@ class AboutView extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildHighlightChip(BuildContext context, String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white10,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white12),
-      ),
-      child: Text(text, style: const TextStyle(fontSize: 13)),
     );
   }
 }

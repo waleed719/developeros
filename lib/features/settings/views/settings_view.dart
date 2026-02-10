@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../core/di/di.dart';
 import '../controllers/settings_controller.dart';
+import 'widgets/setting_row.dart';
+import 'widgets/color_circle.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -39,9 +41,9 @@ class _SettingsViewState extends State<SettingsView> {
           ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 32),
-        _buildSettingRow(
-          'Dark Mode',
-          Switch(
+        SettingRow(
+          label: 'Dark Mode',
+          trailing: Switch(
             value: _controller.themeMode == ThemeMode.dark,
             onChanged: (_) => _controller.toggleTheme(),
             activeThumbColor: const Color(0xFF3584E4),
@@ -58,10 +60,30 @@ class _SettingsViewState extends State<SettingsView> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildColorCircle(const Color(0xFF3584E4), 'Ocean Blue'),
-            _buildColorCircle(const Color(0xFF2EC27E), 'Success Green'),
-            _buildColorCircle(const Color(0xFFF5C211), 'Energy Yellow'),
-            _buildColorCircle(const Color(0xFFC061CB), 'Vibrant Purple'),
+            ColorCircle(
+              color: const Color(0xFF3584E4),
+              tooltip: 'Ocean Blue',
+              isSelected: _controller.accentColor == const Color(0xFF3584E4),
+              onTap: () => _controller.setAccentColor(const Color(0xFF3584E4)),
+            ),
+            ColorCircle(
+              color: const Color(0xFF2EC27E),
+              tooltip: 'Success Green',
+              isSelected: _controller.accentColor == const Color(0xFF2EC27E),
+              onTap: () => _controller.setAccentColor(const Color(0xFF2EC27E)),
+            ),
+            ColorCircle(
+              color: const Color(0xFFF5C211),
+              tooltip: 'Energy Yellow',
+              isSelected: _controller.accentColor == const Color(0xFFF5C211),
+              onTap: () => _controller.setAccentColor(const Color(0xFFF5C211)),
+            ),
+            ColorCircle(
+              color: const Color(0xFFC061CB),
+              tooltip: 'Vibrant Purple',
+              isSelected: _controller.accentColor == const Color(0xFFC061CB),
+              onTap: () => _controller.setAccentColor(const Color(0xFFC061CB)),
+            ),
           ],
         ),
         const SizedBox(height: 48),
@@ -72,46 +94,6 @@ class _SettingsViewState extends State<SettingsView> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildSettingRow(String label, Widget trailing) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(label, style: const TextStyle(fontSize: 16)),
-        trailing,
-      ],
-    );
-  }
-
-  Widget _buildColorCircle(Color color, String tooltip) {
-    final isSelected = _controller.accentColor == color;
-    return Tooltip(
-      message: tooltip,
-      child: GestureDetector(
-        onTap: () => _controller.setAccentColor(color),
-        child: Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: isSelected ? Colors.white : Colors.transparent,
-              width: 3,
-            ),
-            boxShadow: [
-              if (isSelected)
-                BoxShadow(
-                  color: color.withValues(alpha: 0.4),
-                  blurRadius: 10,
-                  spreadRadius: 2,
-                ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/di/di.dart';
 import '../controllers/terminal_controller.dart';
+import 'widgets/terminal_tabs.dart';
 
 class TerminalView extends StatefulWidget {
   const TerminalView({super.key});
@@ -60,7 +61,7 @@ class _TerminalViewState extends State<TerminalView> {
     return Column(
       children: [
         // Terminal Tabs
-        _buildTabs(),
+        TerminalTabs(controller: _controller),
 
         // Terminal Output & Input
         Expanded(
@@ -128,73 +129,6 @@ class _TerminalViewState extends State<TerminalView> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildTabs() {
-    return Container(
-      height: 40,
-      decoration: const BoxDecoration(
-        color: Color(0xFF2D2D2D),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(12),
-          topRight: Radius.circular(12),
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: _controller.tabs.length,
-              itemBuilder: (context, index) {
-                final isActive = index == _controller.activeTabIndex;
-                return GestureDetector(
-                  onTap: () => _controller.setActiveTab(index),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: isActive
-                          ? const Color(0xFF1E1E1E)
-                          : Colors.transparent,
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                        topRight: Radius.circular(8),
-                      ),
-                    ),
-                    child: Center(
-                      child: Row(
-                        children: [
-                          Text(
-                            _controller.tabs[index].name,
-                            style: TextStyle(
-                              color: isActive ? Colors.white : Colors.grey,
-                              fontSize: 12,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          GestureDetector(
-                            onTap: () => _controller.closeTab(index),
-                            child: Icon(
-                              Icons.close,
-                              size: 14,
-                              color: isActive ? Colors.white : Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.add, size: 18, color: Colors.grey),
-            onPressed: () => _controller.addTab(),
-          ),
-        ],
-      ),
     );
   }
 }

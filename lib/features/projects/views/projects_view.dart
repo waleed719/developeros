@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../core/di/di.dart';
 import '../controllers/projects_controller.dart';
-import '../models/project_model.dart';
 import 'project_details_view.dart';
 import '../../desktop/controllers/window_manager.dart';
+import 'widgets/sidebar_item.dart';
+import 'widgets/folder_item.dart';
+import 'widgets/new_folder_item.dart';
+import 'widgets/file_item.dart';
 
 class ProjectsView extends StatefulWidget {
   const ProjectsView({super.key});
@@ -33,19 +36,19 @@ class _ProjectsViewState extends State<ProjectsView> {
           child: Column(
             children: [
               const SizedBox(height: 16),
-              _SidebarItem(icon: Icons.schedule, label: 'Recent'),
-              _SidebarItem(icon: Icons.star_border, label: 'Starred'),
-              _SidebarItem(icon: Icons.home_filled, label: 'Home'),
-              _SidebarItem(
+              const SidebarItem(icon: Icons.schedule, label: 'Recent'),
+              const SidebarItem(icon: Icons.star_border, label: 'Starred'),
+              const SidebarItem(icon: Icons.home_filled, label: 'Home'),
+              const SidebarItem(
                 icon: Icons.folder_open,
                 label: 'Projects',
                 isSelected: true,
               ),
-              _SidebarItem(icon: Icons.code, label: 'Development'),
-              _SidebarItem(icon: Icons.brush, label: 'Design'),
-              _SidebarItem(icon: Icons.person_outline, label: 'Personal'),
+              const SidebarItem(icon: Icons.code, label: 'Development'),
+              const SidebarItem(icon: Icons.brush, label: 'Design'),
+              const SidebarItem(icon: Icons.person_outline, label: 'Personal'),
               const Spacer(),
-              _SidebarItem(icon: Icons.delete_outline, label: 'Trash'),
+              const SidebarItem(icon: Icons.delete_outline, label: 'Trash'),
               const SizedBox(height: 16),
             ],
           ),
@@ -115,10 +118,10 @@ class _ProjectsViewState extends State<ProjectsView> {
                             1, // +1 for "New Folder"
                         itemBuilder: (context, index) {
                           if (index == controller.projects.length) {
-                            return _NewFolderItem();
+                            return const NewFolderItem();
                           }
                           final project = controller.projects[index];
-                          return _FolderItem(
+                          return FolderItem(
                             project: project,
                             isSelected: _selectedProjectId == project.title,
                             onTap: () {
@@ -136,6 +139,10 @@ class _ProjectsViewState extends State<ProjectsView> {
                                   title: project.title,
                                   icon: Icons.folder_special,
                                   content: ProjectDetailsView(project: project),
+                                  size: const Size(
+                                    1000,
+                                    700,
+                                  ), // Larger size for rich content
                                 ),
                               );
                             },
@@ -160,22 +167,22 @@ class _ProjectsViewState extends State<ProjectsView> {
                         mainAxisSpacing: 16,
                         childAspectRatio: 0.7,
                         children: const [
-                          _FileItem(
+                          FileItem(
                             icon: Icons.description,
                             label: 'Resume_2023.pdf',
                             color: Colors.redAccent,
                           ),
-                          _FileItem(
+                          FileItem(
                             icon: Icons.info_outline,
                             label: 'README.md',
                             color: Colors.blueAccent,
                           ),
-                          _FileItem(
+                          FileItem(
                             icon: Icons.image,
                             label: 'header_bg.jpg',
                             color: Colors.purpleAccent,
                           ),
-                          _FileItem(
+                          FileItem(
                             icon: Icons.settings,
                             label: 'config.json',
                             color: Colors.grey,
@@ -188,169 +195,6 @@ class _ProjectsViewState extends State<ProjectsView> {
               ),
             ],
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class _SidebarItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool isSelected;
-
-  const _SidebarItem({
-    required this.icon,
-    required this.label,
-    this.isSelected = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(
-        color: isSelected
-            ? Colors.white.withValues(alpha: 0.1)
-            : Colors.transparent,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: ListTile(
-        leading: Icon(
-          icon,
-          size: 20,
-          color: isSelected ? Colors.white : Colors.white70,
-        ),
-        title: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.white70,
-            fontSize: 14,
-            fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
-          ),
-        ),
-        dense: true,
-        horizontalTitleGap: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-        onTap: () {},
-      ),
-    );
-  }
-}
-
-class _FolderItem extends StatelessWidget {
-  final Project project;
-  final bool isSelected;
-  final VoidCallback onTap;
-  final VoidCallback onDoubleTap;
-
-  const _FolderItem({
-    required this.project,
-    required this.isSelected,
-    required this.onTap,
-    required this.onDoubleTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      onDoubleTap: onDoubleTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected ? const Color(0xFF3584E4) : Colors.transparent,
-            width: 2,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.folder, size: 64, color: Color(0xFF3584E4)),
-            const SizedBox(height: 12),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                project.title,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              project.tags.isNotEmpty ? project.tags.first : 'Project',
-              style: const TextStyle(fontSize: 10, color: Colors.white54),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _NewFolderItem extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
-          style: BorderStyle.solid,
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Icon(Icons.add_circle_outline, size: 48, color: Colors.white30),
-          SizedBox(height: 8),
-          Text(
-            'New Folder',
-            style: TextStyle(color: Colors.white30, fontSize: 13),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _FileItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
-
-  const _FileItem({
-    required this.icon,
-    required this.label,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 60,
-          height: 80,
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.05),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(icon, color: color, size: 32),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 12, color: Colors.white70),
-          overflow: TextOverflow.ellipsis,
         ),
       ],
     );

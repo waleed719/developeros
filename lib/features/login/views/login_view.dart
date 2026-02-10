@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/theme.dart';
 import '../../../core/di/di.dart';
 import '../controllers/auth_controller.dart';
+import 'widgets/digital_clock_large.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -28,7 +28,7 @@ class LoginView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const _DigitalClockLarge(),
+                const DigitalClockLarge(),
                 const SizedBox(height: 48),
                 CircleAvatar(
                   radius: 50,
@@ -70,63 +70,5 @@ class LoginView extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class _DigitalClockLarge extends StatelessWidget {
-  const _DigitalClockLarge();
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<DateTime>(
-      stream: Stream.periodic(
-        const Duration(seconds: 1),
-        (_) => DateTime.now(),
-      ),
-      builder: (context, snapshot) {
-        final time = snapshot.data ?? DateTime.now();
-        final hours = time.hour.toString().padLeft(2, '0');
-        final minutes = time.minute.toString().padLeft(2, '0');
-        final date = "${_getMonth(time.month)} ${time.day}";
-        return Column(
-          children: [
-            Text(
-              '$hours:$minutes',
-              style: GoogleFonts.inter(
-                color: Colors.white,
-                fontSize: 80,
-                fontWeight: FontWeight.w200,
-              ),
-            ),
-            Text(
-              date,
-              style: GoogleFonts.inter(
-                color: Colors.white70,
-                fontSize: 24,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  String _getMonth(int month) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    return months[month - 1];
   }
 }
