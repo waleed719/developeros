@@ -20,7 +20,7 @@ class DeveloperOS extends StatelessWidget {
       builder: (context, _) {
         final settings = di.sl<SettingsController>();
         return MaterialApp.router(
-          title: 'Developer OS',
+          title: 'Waleed Qamar',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
